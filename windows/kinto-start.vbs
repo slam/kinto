@@ -4,4 +4,4 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 
 path = wShell.ExpandEnvironmentStrings("""%userprofile%")
 strFolder = fso.BuildPath( path, "\.kinto\kinto.ahk"" {kbtype}")
-oShell.ShellExecute "C:\Program Files\AutoHotkey\AutoHotkey.exe", strFolder, , "runas", 0
+oShell.ShellExecute "AutoHotkeyU64.exe", strFolder, , "runas", 0

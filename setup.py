@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, time, os, sys, subprocess, shlex, platform,argparse
+import json, time, os, sys, subprocess, shlex, platform, argparse
 from shutil import copyfile
 from subprocess import PIPE, Popen
 from prekinto import *
@@ -14,6 +14,7 @@ args = parser.parse_args()
 homedir = os.path.expanduser("~")
 kintotype = 0
 
+
 def windows_setup():
 	keymaps = ["Apple keyboard standard", "Windows keyboard standard","Chromebook","IBM - No Super/Win","Uninstall"]
 	for index, item in enumerate(keymaps):
@@ -25,52 +26,52 @@ def windows_setup():
 	# Short DOS path notation
 	path= cmdline('echo ''%cd%''')[:-1]
 	if default > 0 and default < 5:
-		print("Will now install chocolatey and autohotkey with elevated privileges...")
-		print("This install will fail if you are not running with elevated privileges")
-		os.system('powershell -executionpolicy bypass ".\\windows\\autohotkey.ps1"')
+		# print("Will now install chocolatey and autohotkey with elevated privileges...")
+		# print("This install will fail if you are not running with elevated privileges")
+		# os.system('powershell -executionpolicy bypass ".\\windows\\autohotkey.ps1"')
 		print("Copying autohotkey combinations for Terminals & Editors...")
 		os.system('copy /Y "' + path + '\\windows\\kinto.ahk" "' + homedir + '\\kinto-new.ahk"')
 	if default < 3:
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; Default)(?!( - ST2CODE))(.*)/$2$3$5/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; Default)(?!( - ST2CODE))(.*)/$2$3$5/gm" ' + homedir + '\\kinto-new.ahk')
 	if default == 1:
 		kbtype = "mac"
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; MacModifiers)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; MacModifiers)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 	elif default == 2:
 		kbtype = "win"
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; WinModifiers)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; WinModifiers)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 	elif default == 5:
 		print("Removing any old registry keys from prior versions...")
-		p = subprocess.Popen(['powershell.exe', "Remove-ItemProperty -Path HKLM:'SYSTEM\CurrentControlSet\Control\Keyboard Layout' -Name 'Scancode Map' -ErrorAction SilentlyContinue"], stdout=sys.stdout)
+		p = subprocess.Popen(['powershell.exe', "Remove-ItemProperty -Path HKLM:'SYSTEM\\CurrentControlSet\\Control\\Keyboard Layout' -Name 'Scancode Map' -ErrorAction SilentlyContinue"], stdout=sys.stdout)
 		print("Removing Kinto from Startup folder...")
 		os.system("(del \"C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\\kinto.ahk\") 2> nul")
 		os.system('(del "%userprofile%\\AppData\\Roaming\\Microsoft\\Windows\\STARTM~1\\Programs\\Startup\\kinto-start.vbs") 2> nul')
 		print("Ending any running Kinto tasks...")
-		os.system("(taskkill /IM autohotkey.exe) 2> nul")
+		os.system("(taskkill /IM autohotkeyu64.exe) 2> nul")
 		print("Removing Kinto from users profile directory...")
 		os.system('(rd /s /q "%userprofile%\\.kinto") 2> nul')
 		print("")
 		print("Uninstall of Kinto is Complete.")
 	if default == 3:
 		kbtype = "chrome"
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; Chromebook)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; WinModifiers\/CB)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; Chromebook)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; WinModifiers\/CB)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 	if default == 3 or default == 4:
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; CB\/IBM)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; WinModifiers\/CB\/IBM)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; CB\/IBM)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; WinModifiers\/CB\/IBM)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 	if default == 4:
 		kbtype = "ibm"
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; IBM)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+		os.system('perl.exe -pi -e "s/(; )(.*)(; IBM)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 	if default > 0 and default < 5:
 		stvscode = yn_choice(bcolors.CYELLOW2 + "Would you like to use Sublime Text 3 keymaps in VS Code?\n" + bcolors.ENDC)
 		print("\nWill now install Ubuntu Terminal Theme as default...")
 		os.system('regedit "' + path + '\\windows\\theme_ubuntu.reg"')
 		os.system('robocopy "'+ path + '\\assets" "%userprofile%\\.kinto\\assets" /E')
 		if (stvscode and (default > 0 or default < 3)):
-			os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; Default - ST2CODE)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+			os.system('perl.exe -pi -e "s/(; )(.*)(; Default - ST2CODE)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 		elif (stvscode and (default == 3 or default == 4 )):
-			os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/(; )(.*)(; CB/IBM - ST2CODE)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
+			os.system('perl.exe -pi -e "s/(; )(.*)(; CB/IBM - ST2CODE)/$2$3/gm" ' + homedir + '\\kinto-new.ahk')
 		os.system('copy /Y "' + path + '\\windows\\kinto-start.vbs" "%userprofile%\\.kinto\\kinto-start.vbs"')
-		os.system('C:\\Strawberry\\perl\\bin\\perl.exe -pi -e "s/{kbtype}/' + kbtype + '/gm" "%userprofile%\\.kinto\\kinto-start.vbs"')
+		os.system('perl.exe -pi -e "s/{kbtype}/' + kbtype + '/gm" "%userprofile%\\.kinto\\kinto-start.vbs"')
 		os.system('copy /Y "' + path + '\\windows\\usb.vbs" "%userprofile%\\.kinto\\usb.vbs"')
 		os.system('copy /Y "' + path + '\\windows\\detectUSB.ahk" "%userprofile%\\.kinto\\detectUSB.ahk"')
 		os.system('mklink "%userprofile%\\AppData\\Roaming\\Microsoft\\Windows\\STARTM~1\\Programs\\Startup\\kinto-start.vbs" "%userprofile%\\.kinto\\kinto-start.vbs"')
@@ -135,5 +136,3 @@ if args.uninstall:
 	exit()
 
 subprocess.check_call(shlex.split("./xkeysnail_service.sh"))
-
-
